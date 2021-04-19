@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+$base-color: #0f2133;
+$toolbar-height: 70px;
+html, body {
+  height: 100%;
+  padding: 0;
+
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', Roboto, "Helvetica Neue", sans-serif;
+  background: url(https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3900&q=80);
+  background-size: cover;
+  background-attachment: fixed;
+}
+

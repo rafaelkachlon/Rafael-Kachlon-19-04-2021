@@ -1,0 +1,18 @@
+.forecast-card {
+  background: white;
+  padding: 30px;
+  margin: 0 30px 30px;
+  -webkit-box-shadow: 4px 4px 18px 0 #989898;
+  box-shadow: 4px 4px 18px 0 #989898;
+  border-radius: 10px;
+  transition: transform .2s;
+
+  &:hover {
+    transform: scale(1.2);
+
+  }
+
+  .image {
+    width: 100px;
+  }
+}

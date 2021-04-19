@@ -1,0 +1,14 @@
+.search-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  .location-label {
+    font-size: 25px;
+  }
+}
+
+::ng-deep .p-autocomplete-input {
+  font-size: 30px;
+}

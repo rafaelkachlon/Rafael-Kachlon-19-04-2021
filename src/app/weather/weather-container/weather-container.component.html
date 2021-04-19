@@ -1,0 +1,12 @@
+<div class="search-container">
+  <label class="location-label" for="location">Enter Location</label>
+  <p-autoComplete field="LocalizedName"
+                  [suggestions]="results$ | async" delay="500"
+                  (onSelect)="selectCity($event)" inputId="location"
+                  (completeMethod)="search($event)"
+                  emptyMessage="No Results"></p-autoComplete>
+</div>
+<ng-container *ngIf="(fiveDaysForecast$ | async) as forecast">
+  <app-forecast-list [cityName]="SelectedCityName" [forecast]="forecast"></app-forecast-list>
+</ng-container>
+

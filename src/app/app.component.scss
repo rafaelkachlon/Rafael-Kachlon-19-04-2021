@@ -1,0 +1,48 @@
+@import "src/styles";
+
+.p-toolbar.toolbar {
+  background-color: #fbfbfb78;
+  height: 70px;
+  border: none;
+  width: 100%;
+  border-bottom: 1px solid black;
+
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .links {
+    margin-left: 50px;
+
+    a {
+      margin: 0 20px;
+      text-decoration: none;
+      padding: 10px;
+      //border: 1px solid;
+      border-radius: 10px;
+    }
+  }
+}
+
+.router-outlet {
+  background: #ffffff70;
+  height: calc(100% - #{$toolbar-height});
+  padding-top: 30px;
+}
+
+
+@media only screen and (max-width: 768px) {
+  .title {
+    font-size: 14px;
+  }
+}
+
+
+.page-content {
+  padding-top: 70px;
+  border: 1px solid;
+}
+
