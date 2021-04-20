@@ -3,6 +3,10 @@ import {WeatherService} from '../weather.service';
 import {Observable} from 'rxjs';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
 import {FiveDayForecastResponse} from '../models/five-day-forecast-response.model';
+import {Store} from '@ngrx/store';
+import {selectCurrentLocation} from '../store/selectors/forecast.selector';
+import * as fromActions from '../store/actions/weather.actions';
+import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-weather-container',
@@ -13,14 +17,18 @@ export class WeatherContainerComponent implements OnInit {
 
   results$: Observable<AutocompleteResponseModel[]>;
   fiveDaysForecast$: Observable<FiveDayForecastResponse>;
-  SelectedCityName: string;
 
-  constructor(private weatherService: WeatherService) {
+  CurrentLocation$: Observable<{ name: string, key: string }>;
+
+  constructor(private weatherService: WeatherService,
+              private store: Store) {
   }
 
   ngOnInit(): void {
-    this.SelectedCityName = 'Tel Aviv';
-    this.fiveDaysForecast$ = this.weatherService.getForecastByLocationKey('fff');
+    this.CurrentLocation$ = this.store.select(selectCurrentLocation);
+    this.CurrentLocation$.pipe(first()).subscribe(location => {
+      this.fiveDaysForecast$ = this.weatherService.getForecastByLocationKey(location.key);
+    });
   }
 
   search(event): void {
@@ -28,8 +36,7 @@ export class WeatherContainerComponent implements OnInit {
   }
 
   selectCity(city: AutocompleteResponseModel): void {
-    this.SelectedCityName = city.LocalizedName;
-    this.fiveDaysForecast$ = this.weatherService.getForecastByLocationKey(city.Key);
+    this.store.dispatch(fromActions.updateCurrentLocation({name: city.LocalizedName, key: city.Key}));
   }
 
 }

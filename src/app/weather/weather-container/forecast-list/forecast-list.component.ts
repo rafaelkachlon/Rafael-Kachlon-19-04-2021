@@ -18,7 +18,7 @@ export class ForecastListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.forecast);
+    // console.log(this.forecast);
   }
 
   get dateRange(): string {
