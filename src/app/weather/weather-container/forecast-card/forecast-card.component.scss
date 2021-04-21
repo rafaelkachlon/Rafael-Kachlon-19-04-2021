@@ -6,6 +6,7 @@
   box-shadow: 4px 4px 18px 0 #989898;
   border-radius: 10px;
   transition: transform .2s;
+  text-align: center;
 
   &:hover {
     transform: scale(1.2);
@@ -14,5 +15,17 @@
 
   .image {
     width: 100px;
+  }
+
+  .temperatures {
+    //text-align: center;
+    font-size: larger;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+
+  .forecast-card {
+    width: 80vw;
   }
 }

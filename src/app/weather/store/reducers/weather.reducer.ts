@@ -1,10 +1,11 @@
-import {DailyForecast} from '../../models/five-day-forecast-response.model';
+import {ForecastModel} from '../../models/five-day-forecast-response.model';
 import {Action, createReducer, on} from '@ngrx/store';
 import {loadFiveDaysForecastSuccess, updateCurrentLocation} from '../actions/weather.actions';
+import {LocationModel} from '../../models/location.model';
 
 export interface ForecastState {
-  currentLocation: { key: string, name: string };
-  fiveDaysForecast: DailyForecast[];
+  currentLocation: LocationModel;
+  fiveDaysForecast: ForecastModel[];
 }
 
 export const initialState: ForecastState = {

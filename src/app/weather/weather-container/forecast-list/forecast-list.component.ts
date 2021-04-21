@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {FiveDayForecastResponse} from '../../models/five-day-forecast-response.model';
+import {ForecastModel} from '../../models/five-day-forecast-response.model';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -12,18 +12,17 @@ export class ForecastListComponent implements OnInit {
 
   @Input() cityName: string;
 
-  @Input() forecast: FiveDayForecastResponse;
+  @Input() forecast: ForecastModel[];
 
   constructor(private date: DatePipe) {
   }
 
   ngOnInit(): void {
-    // console.log(this.forecast);
   }
 
   get dateRange(): string {
-    const startDate = this.date.transform(this.forecast.DailyForecasts[0].Date, 'MMMM dd');
-    const endDate = this.date.transform(this.forecast.DailyForecasts[this.forecast.DailyForecasts.length - 1].Date, 'MMMM dd');
+    const startDate = this.date.transform(this.forecast[0].date, 'MMMM dd');
+    const endDate = this.date.transform(this.forecast[this.forecast.length - 1].date, 'MMMM dd');
     return `${startDate} - ${endDate}`;
   }
 }

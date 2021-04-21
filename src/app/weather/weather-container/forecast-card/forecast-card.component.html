@@ -1,16 +1,13 @@
 <div class="forecast-card">
   <div class="date">
-    {{forecast.Date | date: 'EEEE, MMMM dd'}}
+    {{forecast.date | date: 'EEEE, MMMM dd'}}
   </div>
   <div class="temperature-container">
     <div class="day">
-      <img class="image" src="{{'https://www.accuweather.com/images/weathericons/'+forecast.Day.Icon+'.svg'}}"
-           [attr.alt]="forecast.Day.IconPhrase">
-      <div>{{forecast.Temperature.Maximum.Value}} {{forecast.Temperature.Maximum.Unit}}</div>
-      <div>{{forecast}}</div>
-    </div>
-    <div class="night">
-
+      <img class="image"
+           [src]="forecast.iconUrl"
+           [attr.alt]="forecast.iconText">
+      <div class="temperatures">{{forecast.maxTemperatureC}}° - {{forecast.minTemperatureC}}°</div>
     </div>
   </div>
 </div>

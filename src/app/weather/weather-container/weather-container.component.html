@@ -1,6 +1,6 @@
 <div class="search-container">
   <label class="location-label" for="location">Enter Location</label>
-  <p-autoComplete field="LocalizedName"
+  <p-autoComplete field="name"
                   [suggestions]="results$ | async" delay="500"
                   (onSelect)="selectCity($event)" inputId="location"
                   (completeMethod)="search($event)"

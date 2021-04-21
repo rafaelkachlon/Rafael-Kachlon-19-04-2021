@@ -56,3 +56,12 @@ export interface DailyForecast {
 }
 
 
+export interface ForecastModel {
+  iconUrl: string;
+  iconText: string;
+  miniTemperatureF: number;
+  maxTemperatureF: number;
+  minTemperatureC: number;
+  maxTemperatureC: number;
+  date: Date | string;
+}

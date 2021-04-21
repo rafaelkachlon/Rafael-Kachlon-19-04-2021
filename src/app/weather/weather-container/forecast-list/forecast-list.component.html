@@ -2,7 +2,7 @@
   <h1>{{cityName}} {{dateRange}}</h1>
 
   <div class="cards-container">
-    <app-forecast-card *ngFor="let day of forecast.DailyForecasts" [forecast]="day">
+    <app-forecast-card *ngFor="let day of forecast" [forecast]="day">
     </app-forecast-card>
 
   </div>

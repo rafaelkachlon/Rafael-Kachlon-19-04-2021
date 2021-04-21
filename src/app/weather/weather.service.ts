@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AutocompleteResponseModel} from './models/autocomplete-response.model';
 import {Observable, of} from 'rxjs';
-import {FiveDayForecastResponse} from './models/five-day-forecast-response.model';
-import {map} from 'rxjs/operators';
+import {DailyForecast, FiveDayForecastResponse, ForecastModel} from './models/five-day-forecast-response.model';
+import {map, pluck} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -333,18 +333,51 @@ export class WeatherService {
     ]
   };
 
+  private readonly apiKey = 'xqrHn8gB0aQpaC3m2Ujhadx9cd6RaZGt';
+  private readonly baseUrl = 'http://dataservice.accuweather.com/';
+  private readonly autoComplete = 'locations/v1/cities/autocomplete';
+
   constructor(private http: HttpClient) {
   }
 
-  getCitiesAutoComplete(query: string): Observable<AutocompleteResponseModel[]> {
-    return of(this.autoCompleteMock.filter(result => result.LocalizedName.toLowerCase().includes(query.toLowerCase())));
+  getCitiesAutoComplete(query: string): Observable<any> {
+    return of(this.autoCompleteMock.filter((result) => result.LocalizedName.toLowerCase().includes(query.toLowerCase()))).pipe(
+      map((locations: AutocompleteResponseModel[]) => locations.map(location => {
+        return {name: location.LocalizedName, key: location.Key};
+      }))
+    );
+    // return this.http.get(`${this.baseUrl}${this.autoComplete}`, {
+    //   params: {
+    //     apikey: this.apiKey,
+    //     q: query
+    //   }
+    // });
   }
 
-  getForecastByLocationKey(key: string): Observable<FiveDayForecastResponse> {
+  getForecastByLocationKey(key: string): Observable<ForecastModel[]> {
     return of(this.telAviv5Days).pipe(
-      map(res => {
-        return {...res};
-      })
+      pluck('DailyForecasts'),
+      map((res: DailyForecast[]) => {
+        return res.map(forecast => {
+          return this.createForecastModel(forecast);
+        });
+      }),
     );
+  }
+
+  private getCelsiusTemperature(fahrenheit: number): number {
+    return Math.round((fahrenheit - 32) * 5 / 9);
+  }
+
+  private createForecastModel(forecast: DailyForecast): ForecastModel {
+    return {
+      iconUrl: `https://www.accuweather.com/images/weathericons/${forecast.Day.Icon}.svg`,
+      iconText: forecast.Day.IconPhrase,
+      maxTemperatureC: this.getCelsiusTemperature(forecast.Temperature.Maximum.Value),
+      maxTemperatureF: forecast.Temperature.Maximum.Value,
+      miniTemperatureF: forecast.Temperature.Minimum.Value,
+      minTemperatureC: this.getCelsiusTemperature(forecast.Temperature.Minimum.Value),
+      date: forecast.Date
+    };
   }
 }

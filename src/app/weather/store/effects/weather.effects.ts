@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as fromActions from '../actions/weather.actions';
-import {catchError, map, pluck, switchMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {WeatherService} from '../../weather.service';
 import {of} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -25,7 +25,6 @@ export class WeatherEffects {
       }),
       switchMap((action) => this.weatherService.getForecastByLocationKey(action.key)
         .pipe(
-          pluck('DailyForecasts'),
           map(forecast => {
             return fromActions.loadFiveDaysForecastSuccess({forecast});
           }),
