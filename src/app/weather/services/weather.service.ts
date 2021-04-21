@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {AutocompleteResponseModel} from './models/autocomplete-response.model';
+import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
 import {Observable, of} from 'rxjs';
-import {DailyForecast, FiveDayForecastResponse, ForecastModel} from './models/five-day-forecast-response.model';
+import {DailyForecast, FiveDayForecastResponse, ForecastModel} from '../models/five-day-forecast-response.model';
 import {map, pluck} from 'rxjs/operators';
 
 @Injectable({
@@ -366,7 +366,7 @@ export class WeatherService {
   }
 
   private getCelsiusTemperature(fahrenheit: number): number {
-    return Math.round((fahrenheit - 32) * 5 / 9);
+    return Math.round((fahrenheit - 32) / 1.8);
   }
 
   private createForecastModel(forecast: DailyForecast): ForecastModel {

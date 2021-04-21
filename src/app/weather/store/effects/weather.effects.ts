@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as fromActions from '../actions/weather.actions';
 import {catchError, map, switchMap, withLatestFrom} from 'rxjs/operators';
-import {WeatherService} from '../../weather.service';
+import {WeatherService} from '../../services/weather.service';
 import {of} from 'rxjs';
 import {Store} from '@ngrx/store';
 

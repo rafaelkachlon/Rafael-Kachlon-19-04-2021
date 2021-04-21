@@ -11,6 +11,9 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {WeatherModule} from './weather/weather.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {WeatherEffects} from './weather/store/effects/weather.effects';
+import {SelectButtonModule} from 'primeng/selectbutton';
+import {FormsModule} from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -22,8 +25,10 @@ import {WeatherEffects} from './weather/store/effects/weather.effects';
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([WeatherEffects]),
+    FormsModule,
     WeatherModule,
-    ToolbarModule
+    ToolbarModule,
+    SelectButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {WeatherService} from '../weather.service';
+import {WeatherService} from '../services/weather.service';
 import {Observable} from 'rxjs';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
 import {ForecastModel} from '../models/five-day-forecast-response.model';

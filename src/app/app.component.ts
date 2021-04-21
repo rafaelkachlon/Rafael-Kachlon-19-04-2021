@@ -1,4 +1,6 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {UnitTypeService} from './weather/services/unit-type.service';
+import {UnitType} from './weather/models/unit-type.enum';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +8,19 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent {
-  title = 'weather-task';
+export class AppComponent implements OnInit {
+  unitTypes: any[];
+  currentUnitType: string;
+
+  constructor(private unitTypeService: UnitTypeService) {
+    this.unitTypes = [{label: 'Celsius', value: UnitType.Celsius}, {label: 'Fahrenheit', value: UnitType.Fahrenheit}];
+  }
+
+  ngOnInit(): void {
+    this.currentUnitType = this.unitTypes[0].value;
+  }
+
+  valueChanged(event: any): void {
+    this.unitTypeService.updateUnitType(event.value);
+  }
 }

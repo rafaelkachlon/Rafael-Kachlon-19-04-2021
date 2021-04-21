@@ -6,6 +6,7 @@
                   (completeMethod)="search($event)"
                   emptyMessage="No Results"></p-autoComplete>
 </div>
+
 <ng-container *ngIf="(fiveDaysForecast$ | async) as forecast">
   <app-forecast-list [cityName]="(CurrentLocation$| async)?.name" [forecast]="forecast"></app-forecast-list>
 </ng-container>

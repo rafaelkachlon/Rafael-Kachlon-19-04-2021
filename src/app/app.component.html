@@ -6,6 +6,10 @@
       <a routerLink="favorites" role="button">Favorites</a>
     </div>
   </div>
+  <p-selectButton [options]="unitTypes" [(ngModel)]="currentUnitType"
+                  optionLabel="label"
+                  optionValue="value"
+                  (onChange)="valueChanged($event)"></p-selectButton>
 </p-toolbar>
 
 <div class="router-outlet">

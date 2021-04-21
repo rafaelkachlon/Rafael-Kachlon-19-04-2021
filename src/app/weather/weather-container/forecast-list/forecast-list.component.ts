@@ -14,6 +14,8 @@ export class ForecastListComponent implements OnInit {
 
   @Input() forecast: ForecastModel[];
 
+
+
   constructor(private date: DatePipe) {
   }
 
