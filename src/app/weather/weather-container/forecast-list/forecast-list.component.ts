@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ForecastModel} from '../../models/five-day-forecast-response.model';
 import {DatePipe} from '@angular/common';
 
@@ -6,14 +6,13 @@ import {DatePipe} from '@angular/common';
   selector: 'app-forecast-list',
   templateUrl: './forecast-list.component.html',
   styleUrls: ['./forecast-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe]
 })
 export class ForecastListComponent implements OnInit {
 
   @Input() cityName: string;
-
   @Input() forecast: ForecastModel[];
-
 
 
   constructor(private date: DatePipe) {

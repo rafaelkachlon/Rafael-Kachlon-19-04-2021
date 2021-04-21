@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ForecastModel} from '../../models/five-day-forecast-response.model';
 import {Observable} from 'rxjs';
 import {UnitTypeService} from '../../services/unit-type.service';
@@ -6,7 +6,8 @@ import {UnitTypeService} from '../../services/unit-type.service';
 @Component({
   selector: 'app-forecast-card',
   templateUrl: './forecast-card.component.html',
-  styleUrls: ['./forecast-card.component.scss']
+  styleUrls: ['./forecast-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ForecastCardComponent implements OnInit {
 
