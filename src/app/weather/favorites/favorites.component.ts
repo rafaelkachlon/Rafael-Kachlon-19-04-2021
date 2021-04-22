@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import * as fromFavorites from '../store/selectors/favorites.selector';
+import * as fromFavoritesActions from '../store/actions/favorites.actions';
+import {LocationModel} from '../models/location.model';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-favorites',
@@ -7,9 +12,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FavoritesComponent implements OnInit {
 
-  constructor() { }
+  favorites$: Observable<LocationModel[]>;
+
+  constructor(private store: Store) {
+  }
 
   ngOnInit(): void {
+    this.favorites$ = this.store.select(fromFavorites.selectFavoriteLocations);
   }
 
 }

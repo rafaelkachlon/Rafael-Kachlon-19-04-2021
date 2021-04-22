@@ -1,1 +1,8 @@
-<p>favorites works!</p>
+<ng-container *ngIf="(favorites$ | async).length; else noFavorites">
+  <div *ngFor="let fav of (favorites$ | async)">
+    {{fav.name}}
+  </div>
+</ng-container>
+<ng-template #noFavorites>
+  <div>There aren't any locations in favorites yet.</div>
+</ng-template>

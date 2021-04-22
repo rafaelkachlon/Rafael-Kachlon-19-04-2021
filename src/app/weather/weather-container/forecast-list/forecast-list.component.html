@@ -1,13 +1,11 @@
 <div class="forecast-container">
   <div class="header">
-    <i class="fas fa-heart"></i>
-    <div>{{cityName}} {{dateRange}}</div>
+    <i class="fas fa-heart" [ngClass]="{'fav': isFavorite}" (click)="addRemoveFromFavorites()"></i>
+    <div>{{location.name}} {{dateRange}}</div>
   </div>
-
 
   <div class="cards-container">
     <app-forecast-card *ngFor="let day of forecast" [forecast]="day">
     </app-forecast-card>
-
   </div>
 </div>

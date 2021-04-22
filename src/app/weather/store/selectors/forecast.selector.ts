@@ -1,9 +1,8 @@
 import {ForecastState} from '../reducers/weather.reducer';
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {weatherFeatureKey, WeatherState} from '../reducers';
+import {createSelector} from '@ngrx/store';
+import {WeatherState} from '../reducers';
+import {selectWeatherFeature} from './index';
 
-
-export const selectWeatherFeature = createFeatureSelector<WeatherState>(weatherFeatureKey);
 
 export const selectForecasts = createSelector(
   selectWeatherFeature,

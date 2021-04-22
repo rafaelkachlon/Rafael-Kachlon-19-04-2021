@@ -8,6 +8,7 @@ import {selectCurrentLocation} from '../store/selectors/forecast.selector';
 import * as fromActions from '../store/actions/weather.actions';
 import {first} from 'rxjs/operators';
 import {LocationModel} from '../models/location.model';
+import {updateFavorites} from '../store/actions/favorites.actions';
 
 @Component({
   selector: 'app-weather-container',
@@ -41,4 +42,8 @@ export class WeatherContainerComponent implements OnInit {
     this.store.dispatch(fromActions.updateCurrentLocation({key, name}));
   }
 
+  UpdateFavorites(location: LocationModel): void {
+    console.log(location);
+    this.store.dispatch(updateFavorites({location}));
+  }
 }
