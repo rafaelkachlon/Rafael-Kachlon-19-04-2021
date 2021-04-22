@@ -2,6 +2,23 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-top: 30px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+
+    .fas.fa-heart {
+      font-size: 30px;
+      margin-right: 20px;
+      color: gray;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 
   .cards-container {
     display: flex;

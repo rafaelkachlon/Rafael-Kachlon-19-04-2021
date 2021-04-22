@@ -333,10 +333,6 @@ export class WeatherService {
     ]
   };
 
-  private readonly apiKey = 'xqrHn8gB0aQpaC3m2Ujhadx9cd6RaZGt';
-  private readonly baseUrl = 'http://dataservice.accuweather.com/';
-  private readonly autoComplete = 'locations/v1/cities/autocomplete';
-
   constructor(private http: HttpClient) {
   }
 
@@ -365,7 +361,7 @@ export class WeatherService {
     );
   }
 
-  private getCelsiusTemperature(fahrenheit: number): number {
+  getCelsiusTemperature(fahrenheit: number): number {
     return Math.round((fahrenheit - 32) / 1.8);
   }
 
