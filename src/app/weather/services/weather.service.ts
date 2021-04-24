@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {DailyForecast, FiveDayForecastResponse, ForecastModel} from '../models/five-day-forecast-response.model';
 import {map, pluck} from 'rxjs/operators';
+import {LocationModel} from '../models/location.model';
+import {CurrentConditionsResponse, CurrentForecastModel} from '../models/current-conditions.model';
 
 @Injectable({
   providedIn: 'root'
@@ -332,6 +334,31 @@ export class WeatherService {
       }
     ]
   };
+  private readonly currentConditionsTLV: CurrentConditionsResponse[] = [
+    {
+      LocalObservationDateTime: '2021-04-18T22:55:00+03:00',
+      EpochTime: 1618775700,
+      WeatherText: 'Partly cloudy',
+      WeatherIcon: 35,
+      HasPrecipitation: false,
+      PrecipitationType: null,
+      IsDayTime: false,
+      Temperature: {
+        Metric: {
+          Value: 28.5,
+          Unit: 'C',
+          UnitType: 17
+        },
+        Imperial: {
+          Value: 83,
+          Unit: 'F',
+          UnitType: 18
+        }
+      },
+      MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/current-weather/215854?lang=en-us',
+      Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/current-weather/215854?lang=en-us'
+    }
+  ];
 
   constructor(private http: HttpClient) {
   }
@@ -348,6 +375,18 @@ export class WeatherService {
     //     q: query
     //   }
     // });
+  }
+
+  getFavoritesForecast(favorites: LocationModel[]): Observable<CurrentForecastModel[]> {
+    const obj = favorites.map(fav => this.getCurrentForecast(fav));
+    return forkJoin(obj).pipe(
+      map(res => res)
+    );
+  }
+
+  private getCurrentForecast(location: LocationModel): Observable<CurrentForecastModel> {
+    return of(this.createCurrentConditionsModel(this.currentConditionsTLV[0], location));
+    // call http get current conditions and take the first item of response array
   }
 
   getForecastByLocationKey(key: string): Observable<ForecastModel[]> {
@@ -374,6 +413,18 @@ export class WeatherService {
       miniTemperatureF: forecast.Temperature.Minimum.Value,
       minTemperatureC: this.getCelsiusTemperature(forecast.Temperature.Minimum.Value),
       date: forecast.Date
+    };
+  }
+
+  private createCurrentConditionsModel(item: CurrentConditionsResponse, location: LocationModel): CurrentForecastModel {
+    return {
+      key: location.key,
+      name: location.name,
+      iconUrl: `https://www.accuweather.com/images/weathericons/${item.WeatherIcon}.svg`,
+      iconText: item.WeatherText,
+      currentDate: item.LocalObservationDateTime,
+      currentTemperatureC: item.Temperature.Metric.Value,
+      currentTemperatureF: item.Temperature.Imperial.Value
     };
   }
 }

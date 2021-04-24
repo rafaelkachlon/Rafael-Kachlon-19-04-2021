@@ -4,11 +4,12 @@ import {Observable} from 'rxjs';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
 import {ForecastModel} from '../models/five-day-forecast-response.model';
 import {Store} from '@ngrx/store';
-import {selectCurrentLocation} from '../store/selectors/forecast.selector';
+import {selectCurrentLocation, selectFiveDaysForecast} from '../store/selectors/forecast.selector';
 import * as fromActions from '../store/actions/weather.actions';
 import {first} from 'rxjs/operators';
 import {LocationModel} from '../models/location.model';
 import {updateFavorites} from '../store/actions/favorites.actions';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-weather-container',
@@ -21,29 +22,33 @@ export class WeatherContainerComponent implements OnInit {
   fiveDaysForecast$: Observable<ForecastModel[]>;
 
   CurrentLocation$: Observable<LocationModel>;
+  locationFromFavorites;
 
   constructor(private weatherService: WeatherService,
-              private store: Store) {
+              private store: Store,
+              private router: Router) {
+    this.locationFromFavorites = this.router.getCurrentNavigation().extras.state;
   }
 
   ngOnInit(): void {
     this.CurrentLocation$ = this.store.select(selectCurrentLocation);
-    this.CurrentLocation$.pipe(first()).subscribe(location => {
-      this.fiveDaysForecast$ = this.weatherService.getForecastByLocationKey(location.key);
-    });
+    this.fiveDaysForecast$ = this.store.select(selectFiveDaysForecast);
+    if (!this.locationFromFavorites) {
+      this.CurrentLocation$.pipe(first()).subscribe(location => {
+        this.store.dispatch(fromActions.updateCurrentLocation(location));
+      });
+    }
   }
 
   search(event): void {
     this.results$ = this.weatherService.getCitiesAutoComplete(event.query);
   }
 
-  selectCity(city: LocationModel): void {
-    const {key, name} = city;
-    this.store.dispatch(fromActions.updateCurrentLocation({key, name}));
+  selectLocation(location: LocationModel): void {
+    this.store.dispatch(fromActions.updateCurrentLocation(location));
   }
 
   UpdateFavorites(location: LocationModel): void {
-    console.log(location);
     this.store.dispatch(updateFavorites({location}));
   }
 }

@@ -1,8 +1,18 @@
-<ng-container *ngIf="(favorites$ | async).length; else noFavorites">
-  <div *ngFor="let fav of (favorites$ | async)">
-    {{fav.name}}
-  </div>
-</ng-container>
+<div class="favorites-list" *ngIf="(favorites$ | async).length; else noFavorites">
+  <ng-container *ngFor="let fav of (currentConditions$ | async)">
+    <div class="favorite-card" (click)="goToMain(fav)">
+      <div class="location-name">
+        <div>{{fav.name}}</div>
+      </div>
+      <ng-container *ngIf="(unitType$ | async) as unitType">
+        <div *ngIf="unitType === 'Celsius'">{{fav.currentTemperatureC}}°</div>
+        <div *ngIf="unitType === 'Fahrenheit' ">{{fav.currentTemperatureF}}°</div>
+      </ng-container>
+      <img [src]="fav.iconUrl" [attr.alt]="fav.iconText">
+      <div>{{fav.currentDate | date: 'HH:mm'}}</div>
+    </div>
+  </ng-container>
+</div>
 <ng-template #noFavorites>
   <div>There aren't any locations in favorites yet.</div>
 </ng-template>
