@@ -12,6 +12,7 @@ import {updateFavorites} from '../store/actions/favorites.actions';
 import {Router} from '@angular/router';
 import {AlphabeticPipe} from '../pipes/alpha-betical.pipe';
 import {AutoComplete} from 'primeng/autocomplete';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-weather-container',

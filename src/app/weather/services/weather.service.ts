@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {DailyForecast, FiveDayForecastResponse, ForecastModel} from '../models/five-day-forecast-response.model';
@@ -7,6 +7,7 @@ import {catchError, map, pluck} from 'rxjs/operators';
 import {LocationModel} from '../models/location.model';
 import {CurrentConditionsResponse, CurrentForecastModel} from '../models/current-conditions.model';
 import {environment} from '../../../environments/environment';
+import {MessageService} from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -361,27 +362,34 @@ export class WeatherService {
     }
   ];
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private message: MessageService) {
   }
 
   getCitiesAutoComplete(query: string): Observable<any> {
     return of(this.autoCompleteMock.filter((result) => result.LocalizedName.toLowerCase().includes(query.toLowerCase()))).pipe(
       map((locations: AutocompleteResponseModel[]) => locations.map(location => {
         return {name: location.LocalizedName, key: location.Key};
-      }))
+      })),
+      catchError(err => this.handleError(err, 'Cannot get autocomplete locations'))
     );
-    // return this.http.get(`${this.baseUrl}${this.autoComplete}`, {
+    // return this.http.get(`${environment.baseUrl}${environment.autoComplete}`, {
     //   params: {
-    //     apikey: this.apiKey,
+    //     apikey: environment.apiKey,
     //     q: query
     //   }
-    // });
+    // }).pipe(
+    //   map((locations: AutocompleteResponseModel[]) => locations.map(location => {
+    //     return {name: location.LocalizedName, key: location.Key};
+    //   })),
+    //   catchError(err => this.handleError(err, 'Cannot get autocomplete locations'))
+    // );
   }
 
   getFavoritesForecast(favorites: LocationModel[]): Observable<CurrentForecastModel[]> {
     const obj = favorites.map(fav => this.getCurrentForecast(fav));
     return forkJoin(obj).pipe(
-      map(res => res)
+      map(res => res),
     );
   }
 
@@ -405,6 +413,7 @@ export class WeatherService {
           return this.createForecastModel(forecast);
         });
       }),
+      catchError(err => this.handleError(err, 'Cannot get 5 days forecast'))
     );
   }
 
@@ -415,9 +424,16 @@ export class WeatherService {
     //   }
     // }).pipe(
     //   map((response: CurrentConditionsResponse[]) => this.createCurrentConditionsModel(response[0], location)),
-    //   catchError(err => throwError(err))
+    //         catchError(err => this.handleError(err, 'Cannot get current forecast'))
     // );
     return of(this.createCurrentConditionsModel(this.currentConditionsTLV[0], location));
+  }
+
+  private handleError(err: HttpErrorResponse, message: string): Observable<any> {
+    this.message.add({
+      severity: 'error', summary: 'Error', detail: message
+    });
+    return throwError(err);
   }
 
   private getCelsiusTemperature(fahrenheit: number): number {

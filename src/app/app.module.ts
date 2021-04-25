@@ -12,6 +12,7 @@ import {WeatherModule} from './weather/weather.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {WeatherEffects} from './weather/store/effects/weather.effects';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([WeatherEffects]),

@@ -9,7 +9,8 @@ import {ForecastCardComponent} from './weather-container/forecast-card/forecast-
 import {StoreModule} from '@ngrx/store';
 import {reducers, weatherFeatureKey} from './store/reducers';
 import {AlphabeticPipe} from './pipes/alpha-betical.pipe';
-
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
 
 @NgModule({
   declarations: [WeatherContainerComponent, FavoritesComponent, ForecastListComponent, ForecastCardComponent, AlphabeticPipe],
@@ -17,8 +18,10 @@ import {AlphabeticPipe} from './pipes/alpha-betical.pipe';
     CommonModule,
     HttpClientModule,
     AutoCompleteModule,
+    ToastModule,
     StoreModule.forFeature(weatherFeatureKey, reducers)
-  ]
+  ],
+  providers: [MessageService]
 })
 export class WeatherModule {
 }
