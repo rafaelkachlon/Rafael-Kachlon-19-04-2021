@@ -8,6 +8,7 @@ import {LocationModel} from '../models/location.model';
 import {CurrentConditionsResponse, CurrentForecastModel} from '../models/current-conditions.model';
 import {environment} from '../../../environments/environment';
 import {MessageService} from 'primeng/api';
+import {GeoPositionResponse} from '../models/geo-position.model';
 
 @Injectable({
   providedIn: 'root'
@@ -361,6 +362,65 @@ export class WeatherService {
       Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/current-weather/215854?lang=en-us'
     }
   ];
+  private readonly geoPositionResponse: GeoPositionResponse = {
+    Version: 1,
+    Key: '215613',
+    Type: 'City',
+    Rank: 45,
+    LocalizedName: 'Ashdod',
+    EnglishName: 'Ashdod',
+    PrimaryPostalCode: '',
+    Region: {
+      ID: 'MEA',
+      LocalizedName: 'Middle East',
+      EnglishName: 'Middle East'
+    },
+    Country: {
+      ID: 'IL',
+      LocalizedName: 'Israel',
+      EnglishName: 'Israel'
+    },
+    AdministrativeArea: {
+      ID: 'D',
+      LocalizedName: 'Southern District',
+      EnglishName: 'Southern District',
+      Level: 1,
+      LocalizedType: 'District',
+      EnglishType: 'District',
+      CountryID: 'IL'
+    },
+    TimeZone: {
+      Code: 'IDT',
+      Name: 'Asia/Jerusalem',
+      GmtOffset: 3,
+      IsDaylightSaving: true,
+      NextOffsetChange: '2021-10-30T23:00:00Z'
+    },
+    GeoPosition: {
+      Latitude: 31.799,
+      Longitude: 34.649,
+      Elevation: {
+        Metric: {
+          Value: 34,
+          Unit: 'm',
+          UnitType: 5
+        },
+        Imperial: {
+          Value: 111,
+          Unit: 'ft',
+          UnitType: 0
+        }
+      }
+    },
+    IsAlias: false,
+    SupplementalAdminAreas: [],
+    DataSets: [
+      'AirQualityCurrentConditions',
+      'AirQualityForecasts',
+      'Alerts',
+      'ForecastConfidence'
+    ]
+  };
 
   constructor(private http: HttpClient,
               private message: MessageService) {
@@ -415,6 +475,26 @@ export class WeatherService {
       }),
       catchError(err => this.handleError(err, 'Cannot get 5 days forecast'))
     );
+  }
+
+  getLocationByPosition(position: Position): Observable<LocationModel> {
+    return of(this.geoPositionResponse)
+      .pipe(
+        map(location => {
+          return {key: location.Key, name: location.EnglishName};
+        })
+      );
+    // return this.http.get(`${environment.baseUrl}${environment.byGeoPosition}`, {
+    //   params: {
+    //     apikey: environment.apiKey,
+    //     q: `${position.coords.latitude},${position.coords.longitude}`
+    //   }
+    // }).pipe(
+    //   map((location: GeoPositionResponse) => {
+    //     return {key: location.Key, name: location.EnglishName};
+    //   }),
+    //   catchError(err => this.handleError(err, 'Cannot get condition of current position'))
+    // );
   }
 
   private getCurrentForecast(location: LocationModel): Observable<CurrentForecastModel> {

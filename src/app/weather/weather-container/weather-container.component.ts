@@ -12,7 +12,6 @@ import {updateFavorites} from '../store/actions/favorites.actions';
 import {Router} from '@angular/router';
 import {AlphabeticPipe} from '../pipes/alpha-betical.pipe';
 import {AutoComplete} from 'primeng/autocomplete';
-import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-weather-container',
@@ -24,7 +23,6 @@ export class WeatherContainerComponent implements OnInit, AfterViewInit {
 
   results$: Observable<AutocompleteResponseModel[]>;
   fiveDaysForecast$: Observable<ForecastModel[]>;
-
   CurrentLocation$: Observable<LocationModel>;
   locationFromFavorites;
 
@@ -40,6 +38,20 @@ export class WeatherContainerComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.CurrentLocation$ = this.store.select(selectCurrentLocation);
     this.fiveDaysForecast$ = this.store.select(selectFiveDaysForecast);
+    window.navigator.geolocation
+      .getCurrentPosition(
+        this.getPositionSuccess.bind(this),
+        this.getPositionError.bind(this));
+  }
+
+  getPositionSuccess(position: Position): void {
+    if (!this.locationFromFavorites) {
+      this.weatherService.getLocationByPosition(position).pipe(first())
+        .subscribe(location => this.store.dispatch(fromActions.updateCurrentLocation(location)));
+    }
+  }
+
+  getPositionError(): void {
     if (!this.locationFromFavorites) {
       this.CurrentLocation$.pipe(first()).subscribe(location => {
         this.store.dispatch(fromActions.updateCurrentLocation(location));
