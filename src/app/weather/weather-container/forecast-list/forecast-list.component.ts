@@ -36,9 +36,12 @@ export class ForecastListComponent implements OnInit, OnDestroy {
   }
 
   get dateRange(): string {
-    const startDate = this.date.transform(this.forecast[0].date, 'MMMM dd');
-    const endDate = this.date.transform(this.forecast[this.forecast.length - 1].date, 'MMMM dd');
-    return `${startDate} - ${endDate}`;
+    if (this.forecast.length) {
+      const startDate = this.date.transform(this.forecast[0].date, 'MMMM dd');
+      const endDate = this.date.transform(this.forecast[this.forecast.length - 1].date, 'MMMM dd');
+      return `${startDate} - ${endDate}`;
+    }
+    return '';
   }
 
   get isFavorite(): boolean {

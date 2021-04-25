@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
-import {forkJoin, Observable, of} from 'rxjs';
+import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {DailyForecast, FiveDayForecastResponse, ForecastModel} from '../models/five-day-forecast-response.model';
-import {map, pluck} from 'rxjs/operators';
+import {catchError, map, pluck} from 'rxjs/operators';
 import {LocationModel} from '../models/location.model';
 import {CurrentConditionsResponse, CurrentForecastModel} from '../models/current-conditions.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -384,12 +385,19 @@ export class WeatherService {
     );
   }
 
-  private getCurrentForecast(location: LocationModel): Observable<CurrentForecastModel> {
-    return of(this.createCurrentConditionsModel(this.currentConditionsTLV[0], location));
-    // call http get current conditions and take the first item of response array
-  }
-
   getForecastByLocationKey(key: string): Observable<ForecastModel[]> {
+    // return this.http.get(`${environment.baseUrl}${environment.fiveDaysForecast}${key}`, {
+    //   params: {
+    //     apikey: environment.apiKey
+    //   }
+    // }).pipe(
+    //   pluck('DailyForecasts'),
+    //   map((res: DailyForecast[]) => {
+    //     return res.map(forecast => {
+    //       return this.createForecastModel(forecast);
+    //     });
+    //   }),
+    // );
     return of(this.telAviv5Days).pipe(
       pluck('DailyForecasts'),
       map((res: DailyForecast[]) => {
@@ -400,7 +408,19 @@ export class WeatherService {
     );
   }
 
-  getCelsiusTemperature(fahrenheit: number): number {
+  private getCurrentForecast(location: LocationModel): Observable<CurrentForecastModel> {
+    // return this.http.get(`${environment.baseUrl}${environment.currentCondition}${location.key}`, {
+    //   params: {
+    //     apikey: environment.apiKey
+    //   }
+    // }).pipe(
+    //   map((response: CurrentConditionsResponse[]) => this.createCurrentConditionsModel(response[0], location)),
+    //   catchError(err => throwError(err))
+    // );
+    return of(this.createCurrentConditionsModel(this.currentConditionsTLV[0], location));
+  }
+
+  private getCelsiusTemperature(fahrenheit: number): number {
     return Math.round((fahrenheit - 32) / 1.8);
   }
 
