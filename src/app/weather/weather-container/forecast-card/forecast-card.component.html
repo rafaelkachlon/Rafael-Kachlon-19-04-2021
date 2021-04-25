@@ -11,10 +11,10 @@
   <div class="temperature-container">
       <ng-container *ngIf="(unitType$ | async) as unitType">
         <div class="temperatures" *ngIf="unitType === 'Celsius'">
-          {{forecast.maxTemperatureC}}° - {{forecast.minTemperatureC}}°
+          {{forecast.maxTemperatureC}}°-{{forecast.minTemperatureC}}°
         </div>
         <div class="temperatures" *ngIf="unitType==='Fahrenheit'">
-          {{forecast.maxTemperatureF}}° - {{forecast.miniTemperatureF}}°
+          {{forecast.maxTemperatureF}}°-{{forecast.miniTemperatureF}}°
         </div>
       </ng-container>
   </div>

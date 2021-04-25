@@ -14,8 +14,6 @@ export class WeatherEffects {
               private store$: Store) {
   }
 
-  // locationAutoComplete$
-
   fiveDailyForecast$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(fromActions.updateCurrentLocation),
