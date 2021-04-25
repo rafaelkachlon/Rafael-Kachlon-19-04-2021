@@ -38,10 +38,15 @@ export class WeatherContainerComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.CurrentLocation$ = this.store.select(selectCurrentLocation);
     this.fiveDaysForecast$ = this.store.select(selectFiveDaysForecast);
-    window.navigator.geolocation
-      .getCurrentPosition(
-        this.getPositionSuccess.bind(this),
-        this.getPositionError.bind(this));
+
+    if (window.navigator.geolocation) {
+      window.navigator.geolocation
+        .getCurrentPosition(
+          this.getPositionSuccess.bind(this),
+          this.getPositionError.bind(this));
+    } else {
+      this.getPositionError();
+    }
   }
 
   getPositionSuccess(position: Position): void {
