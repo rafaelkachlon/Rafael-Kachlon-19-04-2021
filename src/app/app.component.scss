@@ -48,11 +48,13 @@
 
       a {
         padding: 0;
+        margin: 0 10px;
       }
     }
   }
-
-
+  .p-selectbutton .p-button {
+    padding: 10px;
+  }
   .page-content {
     padding-top: 70px;
     border: 1px solid;
