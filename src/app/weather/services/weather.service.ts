@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AutocompleteResponseModel} from '../models/autocomplete-response.model';
-import {forkJoin, Observable, of, throwError} from 'rxjs';
-import {DailyForecast, FiveDayForecastResponse, ForecastModel} from '../models/five-day-forecast-response.model';
+import {forkJoin, Observable,  throwError} from 'rxjs';
+import {DailyForecast, ForecastModel} from '../models/five-day-forecast-response.model';
 import {catchError, map, pluck} from 'rxjs/operators';
 import {LocationModel} from '../models/location.model';
 import {CurrentConditionsResponse, CurrentForecastModel} from '../models/current-conditions.model';
@@ -15,435 +15,22 @@ import {GeoPositionResponse} from '../models/geo-position.model';
 })
 export class WeatherService {
 
-  private readonly autoCompleteMock: AutocompleteResponseModel[] = [
-    {
-      Version: 1,
-      Key: '210841',
-      Type: 'City',
-      Rank: 20,
-      LocalizedName: 'Tehran',
-      Country: {
-        ID: 'IR',
-        LocalizedName: 'Iran'
-      },
-      AdministrativeArea: {
-        ID: '07',
-        LocalizedName: 'Tehran'
-      }
-    },
-    {
-      Version: 1,
-      Key: '60592',
-      Type: 'City',
-      Rank: 23,
-      LocalizedName: 'Tengzhou',
-      Country: {
-        ID: 'CN',
-        LocalizedName: 'China'
-      },
-      AdministrativeArea: {
-        ID: 'SD',
-        LocalizedName: 'Shandong'
-      }
-    },
-    {
-      Version: 1,
-      Key: '188046',
-      Type: 'City',
-      Rank: 30,
-      LocalizedName: 'Tegucigalpa',
-      Country: {
-        ID: 'HN',
-        LocalizedName: 'Honduras'
-      },
-      AdministrativeArea: {
-        ID: 'FM',
-        LocalizedName: 'Francisco Morazán'
-      }
-    },
-    {
-      Version: 1,
-      Key: '45253',
-      Type: 'City',
-      Rank: 31,
-      LocalizedName: 'Teresina',
-      Country: {
-        ID: 'BR',
-        LocalizedName: 'Brazil'
-      },
-      AdministrativeArea: {
-        ID: 'PI',
-        LocalizedName: 'Piauí'
-      }
-    },
-    {
-      Version: 1,
-      Key: '215854',
-      Type: 'City',
-      Rank: 31,
-      LocalizedName: 'Tel Aviv',
-      Country: {
-        ID: 'IL',
-        LocalizedName: 'Israel'
-      },
-      AdministrativeArea: {
-        ID: 'TA',
-        LocalizedName: 'Tel Aviv'
-      }
-    },
-    {
-      Version: 1,
-      Key: '234337',
-      Type: 'City',
-      Rank: 31,
-      LocalizedName: 'Tepic',
-      Country: {
-        ID: 'MX',
-        LocalizedName: 'Mexico'
-      },
-      AdministrativeArea: {
-        ID: 'NAY',
-        LocalizedName: 'Nayarit'
-      }
-    },
-    {
-      Version: 1,
-      Key: '246100',
-      Type: 'City',
-      Rank: 32,
-      LocalizedName: 'Tetouan',
-      Country: {
-        ID: 'MA',
-        LocalizedName: 'Morocco'
-      },
-      AdministrativeArea: {
-        ID: '01',
-        LocalizedName: 'Tanger-Tétouan-Al Hoceïma'
-      }
-    },
-    {
-      Version: 1,
-      Key: '61484',
-      Type: 'City',
-      Rank: 33,
-      LocalizedName: 'Tengchong',
-      Country: {
-        ID: 'CN',
-        LocalizedName: 'China'
-      },
-      AdministrativeArea: {
-        ID: 'YN',
-        LocalizedName: 'Yunnan'
-      }
-    },
-    {
-      Version: 1,
-      Key: '3558994',
-      Type: 'City',
-      Rank: 35,
-      LocalizedName: 'Tecámac',
-      Country: {
-        ID: 'MX',
-        LocalizedName: 'Mexico'
-      },
-      AdministrativeArea: {
-        ID: 'MEX',
-        LocalizedName: 'México'
-      }
-    },
-    {
-      Version: 1,
-      Key: '234828',
-      Type: 'City',
-      Rank: 35,
-      LocalizedName: 'Tehuacán',
-      Country: {
-        ID: 'MX',
-        LocalizedName: 'Mexico'
-      },
-      AdministrativeArea: {
-        ID: 'PUE',
-        LocalizedName: 'Puebla'
-      }
-    }
-  ];
-  private readonly telAviv5Days: FiveDayForecastResponse = {
-    Headline: {
-      EffectiveDate: '2021-04-20T08:00:00+03:00',
-      EffectiveEpochDate: 1618894800,
-      Severity: 4,
-      Text: 'Noticeably cooler Tuesday',
-      Category: 'cooler',
-      EndDate: '2021-04-20T20:00:00+03:00',
-      EndEpochDate: 1618938000,
-      MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/extended-weather-forecast/215854?lang=en-us',
-      Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?lang=en-us'
-    },
-    DailyForecasts: [
-      {
-        Date: '2021-04-18T07:00:00+03:00',
-        EpochDate: 1618718400,
-        Temperature: {
-          Minimum: {
-            Value: 70,
-            Unit: 'F',
-            UnitType: 18
-          },
-          Maximum: {
-            Value: 93,
-            Unit: 'F',
-            UnitType: 18
-          }
-        },
-        Day: {
-          Icon: 1,
-          IconPhrase: 'Sunny',
-          HasPrecipitation: false
-        },
-        Night: {
-          Icon: 38,
-          IconPhrase: 'Mostly cloudy',
-          HasPrecipitation: false
-        },
-        Sources: [
-          'AccuWeather'
-        ],
-        MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=1&lang=en-us',
-        Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=1&lang=en-us'
-      },
-      {
-        Date: '2021-04-19T07:00:00+03:00',
-        EpochDate: 1618804800,
-        Temperature: {
-          Minimum: {
-            Value: 69,
-            Unit: 'F',
-            UnitType: 18
-          },
-          Maximum: {
-            Value: 95,
-            Unit: 'F',
-            UnitType: 18
-          }
-        },
-        Day: {
-          Icon: 3,
-          IconPhrase: 'Partly sunny',
-          HasPrecipitation: false
-        },
-        Night: {
-          Icon: 35,
-          IconPhrase: 'Partly cloudy',
-          HasPrecipitation: false
-        },
-        Sources: [
-          'AccuWeather'
-        ],
-        MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=2&lang=en-us',
-        Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=2&lang=en-us'
-      },
-      {
-        Date: '2021-04-20T07:00:00+03:00',
-        EpochDate: 1618891200,
-        Temperature: {
-          Minimum: {
-            Value: 60,
-            Unit: 'F',
-            UnitType: 18
-          },
-          Maximum: {
-            Value: 78,
-            Unit: 'F',
-            UnitType: 18
-          }
-        },
-        Day: {
-          Icon: 3,
-          IconPhrase: 'Partly sunny',
-          HasPrecipitation: false
-        },
-        Night: {
-          Icon: 34,
-          IconPhrase: 'Mostly clear',
-          HasPrecipitation: false
-        },
-        Sources: [
-          'AccuWeather'
-        ],
-        MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=3&lang=en-us',
-        Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=3&lang=en-us'
-      },
-      {
-        Date: '2021-04-21T07:00:00+03:00',
-        EpochDate: 1618977600,
-        Temperature: {
-          Minimum: {
-            Value: 60,
-            Unit: 'F',
-            UnitType: 18
-          },
-          Maximum: {
-            Value: 75,
-            Unit: 'F',
-            UnitType: 18
-          }
-        },
-        Day: {
-          Icon: 4,
-          IconPhrase: 'Intermittent clouds',
-          HasPrecipitation: false
-        },
-        Night: {
-          Icon: 35,
-          IconPhrase: 'Partly cloudy',
-          HasPrecipitation: false
-        },
-        Sources: [
-          'AccuWeather'
-        ],
-        MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=4&lang=en-us',
-        Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=4&lang=en-us'
-      },
-      {
-        Date: '2021-04-22T07:00:00+03:00',
-        EpochDate: 1619064000,
-        Temperature: {
-          Minimum: {
-            Value: 61,
-            Unit: 'F',
-            UnitType: 18
-          },
-          Maximum: {
-            Value: 76,
-            Unit: 'F',
-            UnitType: 18
-          }
-        },
-        Day: {
-          Icon: 2,
-          IconPhrase: 'Mostly sunny',
-          HasPrecipitation: false
-        },
-        Night: {
-          Icon: 35,
-          IconPhrase: 'Partly cloudy',
-          HasPrecipitation: false
-        },
-        Sources: [
-          'AccuWeather'
-        ],
-        MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=5&lang=en-us',
-        Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/daily-weather-forecast/215854?day=5&lang=en-us'
-      }
-    ]
-  };
-  private readonly currentConditionsTLV: CurrentConditionsResponse[] = [
-    {
-      LocalObservationDateTime: '2021-04-18T22:55:00+03:00',
-      EpochTime: 1618775700,
-      WeatherText: 'Partly cloudy',
-      WeatherIcon: 35,
-      HasPrecipitation: false,
-      PrecipitationType: null,
-      IsDayTime: false,
-      Temperature: {
-        Metric: {
-          Value: 28.5,
-          Unit: 'C',
-          UnitType: 17
-        },
-        Imperial: {
-          Value: 83,
-          Unit: 'F',
-          UnitType: 18
-        }
-      },
-      MobileLink: 'http://m.accuweather.com/en/il/tel-aviv/215854/current-weather/215854?lang=en-us',
-      Link: 'http://www.accuweather.com/en/il/tel-aviv/215854/current-weather/215854?lang=en-us'
-    }
-  ];
-  private readonly geoPositionResponse: GeoPositionResponse = {
-    Version: 1,
-    Key: '215613',
-    Type: 'City',
-    Rank: 45,
-    LocalizedName: 'Ashdod',
-    EnglishName: 'Ashdod',
-    PrimaryPostalCode: '',
-    Region: {
-      ID: 'MEA',
-      LocalizedName: 'Middle East',
-      EnglishName: 'Middle East'
-    },
-    Country: {
-      ID: 'IL',
-      LocalizedName: 'Israel',
-      EnglishName: 'Israel'
-    },
-    AdministrativeArea: {
-      ID: 'D',
-      LocalizedName: 'Southern District',
-      EnglishName: 'Southern District',
-      Level: 1,
-      LocalizedType: 'District',
-      EnglishType: 'District',
-      CountryID: 'IL'
-    },
-    TimeZone: {
-      Code: 'IDT',
-      Name: 'Asia/Jerusalem',
-      GmtOffset: 3,
-      IsDaylightSaving: true,
-      NextOffsetChange: '2021-10-30T23:00:00Z'
-    },
-    GeoPosition: {
-      Latitude: 31.799,
-      Longitude: 34.649,
-      Elevation: {
-        Metric: {
-          Value: 34,
-          Unit: 'm',
-          UnitType: 5
-        },
-        Imperial: {
-          Value: 111,
-          Unit: 'ft',
-          UnitType: 0
-        }
-      }
-    },
-    IsAlias: false,
-    SupplementalAdminAreas: [],
-    DataSets: [
-      'AirQualityCurrentConditions',
-      'AirQualityForecasts',
-      'Alerts',
-      'ForecastConfidence'
-    ]
-  };
-
   constructor(private http: HttpClient,
               private message: MessageService) {
   }
 
   getCitiesAutoComplete(query: string): Observable<any> {
-    return of(this.autoCompleteMock.filter((result) => result.LocalizedName.toLowerCase().includes(query.toLowerCase()))).pipe(
+    return this.http.get(`${environment.baseUrl}${environment.autoComplete}`, {
+      params: {
+        apikey: environment.apiKey,
+        q: query
+      }
+    }).pipe(
       map((locations: AutocompleteResponseModel[]) => locations.map(location => {
         return {name: location.LocalizedName, key: location.Key};
       })),
       catchError(err => this.handleError(err, 'Cannot get autocomplete locations'))
     );
-    // return this.http.get(`${environment.baseUrl}${environment.autoComplete}`, {
-    //   params: {
-    //     apikey: environment.apiKey,
-    //     q: query
-    //   }
-    // }).pipe(
-    //   map((locations: AutocompleteResponseModel[]) => locations.map(location => {
-    //     return {name: location.LocalizedName, key: location.Key};
-    //   })),
-    //   catchError(err => this.handleError(err, 'Cannot get autocomplete locations'))
-    // );
   }
 
   getFavoritesForecast(favorites: LocationModel[]): Observable<CurrentForecastModel[]> {
@@ -454,59 +41,43 @@ export class WeatherService {
   }
 
   getForecastByLocationKey(key: string): Observable<ForecastModel[]> {
-    // return this.http.get(`${environment.baseUrl}${environment.fiveDaysForecast}${key}`, {
-    //   params: {
-    //     apikey: environment.apiKey
-    //   }
-    // }).pipe(
-    //   pluck('DailyForecasts'),
-    //   map((res: DailyForecast[]) => {
-    //     return res.map(forecast => {
-    //       return this.createForecastModel(forecast);
-    //     });
-    //   }),
-    // );
-    return of(this.telAviv5Days).pipe(
+    return this.http.get(`${environment.baseUrl}${environment.fiveDaysForecast}${key}`, {
+      params: {
+        apikey: environment.apiKey
+      }
+    }).pipe(
       pluck('DailyForecasts'),
       map((res: DailyForecast[]) => {
         return res.map(forecast => {
           return this.createForecastModel(forecast);
         });
       }),
-      catchError(err => this.handleError(err, 'Cannot get 5 days forecast'))
     );
   }
 
   getLocationByPosition(position: Position): Observable<LocationModel> {
-    return of(this.geoPositionResponse)
-      .pipe(
-        map(location => {
-          return {key: location.Key, name: location.EnglishName};
-        })
-      );
-    // return this.http.get(`${environment.baseUrl}${environment.byGeoPosition}`, {
-    //   params: {
-    //     apikey: environment.apiKey,
-    //     q: `${position.coords.latitude},${position.coords.longitude}`
-    //   }
-    // }).pipe(
-    //   map((location: GeoPositionResponse) => {
-    //     return {key: location.Key, name: location.EnglishName};
-    //   }),
-    //   catchError(err => this.handleError(err, 'Cannot get condition of current position'))
-    // );
+    return this.http.get(`${environment.baseUrl}${environment.byGeoPosition}`, {
+      params: {
+        apikey: environment.apiKey,
+        q: `${position.coords.latitude},${position.coords.longitude}`
+      }
+    }).pipe(
+      map((location: GeoPositionResponse) => {
+        return {key: location.Key, name: location.EnglishName};
+      }),
+      catchError(err => this.handleError(err, 'Cannot get condition of current position'))
+    );
   }
 
   private getCurrentForecast(location: LocationModel): Observable<CurrentForecastModel> {
-    // return this.http.get(`${environment.baseUrl}${environment.currentCondition}${location.key}`, {
-    //   params: {
-    //     apikey: environment.apiKey
-    //   }
-    // }).pipe(
-    //   map((response: CurrentConditionsResponse[]) => this.createCurrentConditionsModel(response[0], location)),
-    //         catchError(err => this.handleError(err, 'Cannot get current forecast'))
-    // );
-    return of(this.createCurrentConditionsModel(this.currentConditionsTLV[0], location));
+    return this.http.get(`${environment.baseUrl}${environment.currentCondition}${location.key}`, {
+      params: {
+        apikey: environment.apiKey
+      }
+    }).pipe(
+      map((response: CurrentConditionsResponse[]) => this.createCurrentConditionsModel(response[0], location)),
+            catchError(err => this.handleError(err, 'Cannot get current forecast'))
+    );
   }
 
   private handleError(err: HttpErrorResponse, message: string): Observable<any> {

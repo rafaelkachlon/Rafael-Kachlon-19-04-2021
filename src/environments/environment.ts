@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiKey: 'xqrHn8gB0aQpaC3m2Ujhadx9cd6RaZGt',
+  apiKey: '3MkiBAOiZjXukWY1sNyLfiwtWUTO5XMJ',
   baseUrl: 'http://dataservice.accuweather.com/',
   autoComplete: 'locations/v1/cities/autocomplete',
   currentCondition: 'currentconditions/v1/',

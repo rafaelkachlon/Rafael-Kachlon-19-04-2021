@@ -5,9 +5,10 @@
         <div>{{fav.name}}</div>
       </div>
       <ng-container *ngIf="(unitType$ | async) as unitType">
-        <div *ngIf="unitType === 'Celsius'">{{fav.currentTemperatureC}}°</div>
-        <div *ngIf="unitType === 'Fahrenheit' ">{{fav.currentTemperatureF}}°</div>
+        <div class="temperature" *ngIf="unitType === 'Celsius'">{{fav.currentTemperatureC}}°</div>
+        <div class="temperature" *ngIf="unitType === 'Fahrenheit' ">{{fav.currentTemperatureF}}°</div>
       </ng-container>
+      <div class="description">{{fav.iconText}}</div>
       <img [src]="fav.iconUrl" [attr.alt]="fav.iconText">
       <div>{{fav.currentDate | date: 'HH:mm'}}</div>
     </div>

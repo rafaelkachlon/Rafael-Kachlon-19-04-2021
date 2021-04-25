@@ -2,13 +2,14 @@
   <div class="date">
     {{forecast.date | date: 'EEEE, MMMM dd'}}
   </div>
+  <div class="description">
+    {{forecast.iconText}}
+  </div>
+  <img class="image"
+       [src]="forecast.iconUrl"
+       [attr.alt]="forecast.iconText">
   <div class="temperature-container">
-    <div class="day">
-      <img class="image"
-           [src]="forecast.iconUrl"
-           [attr.alt]="forecast.iconText">
       <ng-container *ngIf="(unitType$ | async) as unitType">
-
         <div class="temperatures" *ngIf="unitType === 'Celsius'">
           {{forecast.maxTemperatureC}}° - {{forecast.minTemperatureC}}°
         </div>
@@ -16,6 +17,5 @@
           {{forecast.maxTemperatureF}}° - {{forecast.miniTemperatureF}}°
         </div>
       </ng-container>
-    </div>
   </div>
 </div>

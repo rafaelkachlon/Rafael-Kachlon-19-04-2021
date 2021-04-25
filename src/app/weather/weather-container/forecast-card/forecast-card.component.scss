@@ -24,8 +24,17 @@
 }
 
 @media only screen and (max-width: 768px) {
-
   .forecast-card {
     width: 80vw;
+    display: flex;
+    padding: 15px;
+
+    * {
+      width: 25%;
+    }
+
+    .image {
+      width: 50px;
+    }
   }
 }
