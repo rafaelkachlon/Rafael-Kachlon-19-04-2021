@@ -1,11 +1,10 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {ForecastModel} from '../../models/five-day-forecast-response.model';
 import {DatePipe} from '@angular/common';
 import {Store} from '@ngrx/store';
 import {LocationModel} from '../../models/location.model';
 import {selectFavoriteLocations} from '../../store/selectors/favorites.selector';
-import {Observable} from 'rxjs';
-import {Local} from 'protractor/built/driverProviders';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-forecast-list',
@@ -14,13 +13,14 @@ import {Local} from 'protractor/built/driverProviders';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe]
 })
-export class ForecastListComponent implements OnInit {
+export class ForecastListComponent implements OnInit, OnDestroy {
 
   @Input() location: LocationModel;
   @Input() forecast: ForecastModel[];
   @Output() OnFavoriteClick = new EventEmitter();
   favorites$: Observable<LocationModel[]>;
   favorites: LocationModel[];
+  favoritesSubscriber: Subscription;
 
   constructor(private date: DatePipe,
               private store: Store) {
@@ -28,7 +28,7 @@ export class ForecastListComponent implements OnInit {
 
   ngOnInit(): void {
     this.favorites$ = this.store.select(selectFavoriteLocations);
-    this.favorites$.subscribe(favs => this.favorites = favs);
+    this.favoritesSubscriber = this.favorites$.subscribe(favs => this.favorites = favs);
   }
 
   addRemoveFromFavorites(): void {
@@ -43,5 +43,9 @@ export class ForecastListComponent implements OnInit {
 
   get isFavorite(): boolean {
     return this.favorites.some(x => x.key === this.location.key);
+  }
+
+  ngOnDestroy(): void {
+    this.favoritesSubscriber.unsubscribe();
   }
 }

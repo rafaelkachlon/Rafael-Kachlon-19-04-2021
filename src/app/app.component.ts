@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   currentUnitType: string;
 
   constructor(private unitTypeService: UnitTypeService) {
-    this.unitTypes = [{label: 'Celsius', value: UnitType.Celsius}, {label: 'Fahrenheit', value: UnitType.Fahrenheit}];
+    this.unitTypes = [{label: '°C', value: UnitType.Celsius}, {label: '°F', value: UnitType.Fahrenheit}];
   }
 
   ngOnInit(): void {

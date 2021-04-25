@@ -1,9 +1,10 @@
 <div class="search-container">
   <label class="location-label" for="location">Enter Location</label>
-  <p-autoComplete field="name"
+  <p-autoComplete field="name" inputId="location"
                   [suggestions]="results$ | async" delay="500"
-                  (onSelect)="selectLocation($event)" inputId="location"
+                  (onSelect)="selectLocation($event)" #autocomplete
                   (completeMethod)="search($event)"
+                  [forceSelection]="true"
                   emptyMessage="No Results"></p-autoComplete>
 </div>
 

@@ -8,10 +8,11 @@ import {ForecastListComponent} from './weather-container/forecast-list/forecast-
 import {ForecastCardComponent} from './weather-container/forecast-card/forecast-card.component';
 import {StoreModule} from '@ngrx/store';
 import {reducers, weatherFeatureKey} from './store/reducers';
+import {AlphabeticPipe} from './pipes/alpha-betical.pipe';
 
 
 @NgModule({
-  declarations: [WeatherContainerComponent, FavoritesComponent, ForecastListComponent, ForecastCardComponent],
+  declarations: [WeatherContainerComponent, FavoritesComponent, ForecastListComponent, ForecastCardComponent, AlphabeticPipe],
   imports: [
     CommonModule,
     HttpClientModule,

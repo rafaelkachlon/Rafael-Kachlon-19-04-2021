@@ -31,7 +31,6 @@ export class FavoritesComponent implements OnInit {
     this.favorites$ = this.store.select(fromFavorites.selectFavoriteLocations);
     this.favorites$.pipe(first())
       .subscribe(favs => {
-        console.log(favs);
         this.currentConditions$ = this.weatherService.getFavoritesForecast(favs);
       });
     this.unitType$ = this.unitTypeService.getUnitType$();
