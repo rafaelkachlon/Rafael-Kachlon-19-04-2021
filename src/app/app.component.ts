@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUnitType = this.unitTypes[0].value;
+    this.currentUnitType = UnitType.Celsius;
   }
 
   valueChanged(event: any): void {
