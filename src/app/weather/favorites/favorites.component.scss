@@ -11,6 +11,10 @@
   transition: transform 0.2s;
   text-align: center;
 
+  &:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+  }
   .location-name, .temperature {
     font-size: 20px;
     margin: 5px 0
