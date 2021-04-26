@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiKey: '3MkiBAOiZjXukWY1sNyLfiwtWUTO5XMJ',
+  apiKey: 'Y8RgWkfnkR5YW0qdYKAo37G47EibuAGA',
   baseUrl: 'https://dataservice.accuweather.com/',
   autoComplete: 'locations/v1/cities/autocomplete',
   currentCondition: 'currentconditions/v1/',
